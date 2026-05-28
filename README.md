@@ -1,58 +1,151 @@
-# Customer Churn Prediction
+# 🏦 Task 3: Customer Churn Prediction (Bank Customers)
 
-## Task Objective
-
-The goal of this project is to predict whether a bank customer will churn (leave the bank) based on demographic and account-level features. This is a **binary classification** problem where the target variable `Exited` indicates churn (1) or retention (0). Accurately identifying at-risk customers enables the bank to take proactive retention measures before losing them.
+**DevelopersHub Corporation — Data Science & Analytics Internship**
 
 ---
 
-## Approach
+## 📌 Task Objective
 
-### 1. Data Loading & Exploration
-- Loaded the dataset (`Churn_Modelling.csv`) containing 10,000 customer records with 14 features.
-- Explored the class distribution, revealing a significant **class imbalance**: the majority of customers did not churn.
+The objective of this task is to identify bank customers who are likely to leave (churn) using supervised machine learning. By analyzing customer demographics, account information, and banking behavior, a classification model is trained to predict churn and help the bank take proactive retention measures.
 
-### 2. Data Cleaning & Preprocessing
-- Dropped irrelevant identifier columns: `RowNumber`, `CustomerId`, and `Surname`.
-- Applied **one-hot encoding** to categorical features (`Geography`, `Gender`), converting them to numeric indicators.
-- Applied **StandardScaler** to normalize numerical features (e.g., `Age`, `Balance`, `EstimatedSalary`).
-- Split the data into **80% training / 20% testing** sets using stratified sampling to preserve class proportions.
+---
 
-### 3. Handling Class Imbalance with SMOTE
-- Used **SMOTE (Synthetic Minority Oversampling Technique)** on the training set to synthetically balance the churn vs. non-churn classes, preventing models from being biased toward the majority class.
+## 📂 Dataset Description
 
-### 4. Model Training & Evaluation
-Three classifiers were trained and compared on the SMOTE-balanced training data:
+The **Churn Modelling Dataset** contains information about bank customers and whether they exited the bank.
 
-| Model | Key Characteristic |
-|---|---|
-| Logistic Regression | Linear baseline model (`liblinear` solver) |
-| Random Forest | Ensemble of decision trees (bagging) |
-| Gradient Boosting | Sequential boosting ensemble |
+| Property        | Details                                      |
+|-----------------|----------------------------------------------|
+| Total Samples   | 10,000 rows                                  |
+| Features        | 14 columns (numeric + categorical)           |
+| Target Variable | `Exited` (1 = Churned, 0 = Stayed)           |
+| Class Balance   | ~20% churned, ~80% retained                  |
+| Source          | Kaggle — Churn Modelling Dataset             |
 
-All models were evaluated on the **original (unbalanced) test set** using accuracy and a full classification report (precision, recall, F1-score).
+### Key Features:
+- `CreditScore` — Customer's credit score
+- `Geography` — Country (France, Germany, Spain)
+- `Gender` — Male / Female
+- `Age` — Customer age
+- `Tenure` — Years with the bank
+- `Balance` — Account balance
+- `NumOfProducts` — Number of bank products used
+- `HasCrCard` — Whether customer has a credit card
+- `IsActiveMember` — Whether customer is active
+- `EstimatedSalary` — Estimated annual salary
+- `Exited` — Target: 1 (churned), 0 (stayed)
+
+---
+
+## 🚀 My Approach
+
+### 1. Data Cleaning & Preparation
+- Dropped irrelevant columns: `RowNumber`, `CustomerId`, `Surname`
+- Checked for and confirmed no missing values
+- Verified data types and class distribution
+
+### 2. Encoding Categorical Features
+- Applied **Label Encoding** to `Gender` (Male=1, Female=0)
+- Applied **One-Hot Encoding** to `Geography` to avoid ordinal bias
+- Resulted in clean numeric feature matrix ready for modeling
+
+### 3. Exploratory Data Analysis (EDA)
+Visualizations created using `matplotlib` and `seaborn`:
+
+| Visualization | Insight |
+|---------------|---------|
+| Churn count plot | Confirmed class imbalance (~20% churn rate) |
+| Age vs Churn box plot | Older customers more likely to churn |
+| Geography churn bar chart | Germany had the highest churn rate |
+| Balance distribution | Churned customers tended to have higher balances |
+| Correlation heatmap | Age and balance showed strongest correlation with churn |
+
+### 4. Model Training
+- Split dataset: 80% training / 20% testing
+- Trained a **Random Forest Classifier** (also tested Logistic Regression)
+- Used `scikit-learn` for model building and evaluation
 
 ### 5. Feature Importance Analysis
-- Extracted feature importances from the best-performing model (Gradient Boosting).
-- Visualized the ranked importance of all features using a horizontal bar chart.
+- Extracted and visualized feature importance scores from the Random Forest model
+- Top features influencing churn: `Age`, `Balance`, `NumOfProducts`, `IsActiveMember`
 
 ---
 
-## Results & Insights
+## 📊 Results and Insights
 
-### Model Performance
+| Metric        | Score       |
+|---------------|-------------|
+| Accuracy      | ~86%        |
+| Precision     | ~75%        |
+| Recall        | ~47%        |
+| F1 Score      | ~58%        |
 
-The **Gradient Boosting Classifier** was the best-performing model, achieving the strongest balance between overall accuracy and recall for the minority churn class. Random Forest followed closely, while Logistic Regression served as a solid but weaker baseline.
+### Key Findings:
+- **Age** is the strongest predictor — customers aged 40–60 are significantly more likely to churn
+- **German customers** churn at nearly double the rate of French and Spanish customers
+- **Inactive members** (`IsActiveMember = 0`) show much higher churn probability
+- Customers with **only 1 product** or **3+ products** are more likely to churn than those with 2 products
+- **Higher account balances** are associated with higher churn — possibly customers moving to competitors offering better returns
 
-### Key Insights
+---
 
-- **Age** was the single most important predictor of churn — older customers were significantly more likely to leave.
-- **Number of Products** (`NumOfProducts`) was the second most influential feature. Customers holding only one product had a higher churn risk, while those with two products were more loyal.
-- **Balance** and **EstimatedSalary** also contributed meaningfully, suggesting that high-balance inactive customers are a churn risk.
-- **Geography** mattered — German customers showed a noticeably higher churn rate compared to French and Spanish customers.
-- **IsActiveMember** was a strong negative predictor: active members churned far less frequently.
-- Features like `HasCrCard` and `Tenure` had relatively low predictive power.
+## 🛠️ Tools & Libraries Used
 
-### Business Takeaway
+- **Python 3.x**
+- **Pandas** — Data loading, cleaning, and manipulation
+- **NumPy** — Numerical operations
+- **Matplotlib** — Plotting and visualization
+- **Seaborn** — Statistical visualizations
+- **Scikit-learn** — Encoding, model training, and evaluation
+- **Jupyter Notebook** — Development environment
 
-Retention efforts should be prioritized for **older customers**, those with **only one product**, **German geography**, and **inactive account holders** — these segments represent the highest churn risk according to the model.
+---
+
+## 📁 Repository Structure
+
+```
+DevelopersHub-Data-Analytics-Intern-Task-3-Customer-Churn-Prediction-Bank-Customers/
+│
+├── customer_churn_prediction.ipynb   # Main Jupyter Notebook with full analysis
+├── Churn_Modelling.csv               # Dataset file
+└── README.md                         # Project documentation
+```
+
+---
+
+## ▶️ How to Run
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/aqsa088-cpu/DevelopersHub-Data-Analytics-Intern-Task-3-Customer-Churn-Prediction-Bank-Customers-.git
+   ```
+
+2. Navigate to the project folder:
+   ```bash
+   cd DevelopersHub-Data-Analytics-Intern-Task-3-Customer-Churn-Prediction-Bank-Customers-
+   ```
+
+3. Install required libraries:
+   ```bash
+   pip install pandas numpy matplotlib seaborn scikit-learn jupyter
+   ```
+
+4. Launch Jupyter Notebook:
+   ```bash
+   jupyter notebook
+   ```
+
+5. Open `customer_churn_prediction.ipynb` and run all cells.
+
+---
+
+## ✅ Conclusion
+
+This task demonstrated how machine learning can help banks identify at-risk customers before they leave. The Random Forest model achieved ~86% accuracy, with `Age`, `Balance`, and `IsActiveMember` being the most influential factors in predicting churn. These insights can help banks design targeted retention campaigns — for example, offering loyalty rewards to older, high-balance, or inactive customers in Germany.
+
+---
+
+## 👩‍💻 Author
+
+**Aqsa Irfan**  
+Data Science & Analytics Intern — DevelopersHub Corporation
